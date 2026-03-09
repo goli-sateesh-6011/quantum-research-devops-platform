@@ -1,0 +1,50 @@
+- name: Update apt
+  apt:
+    update_cache: yes
+
+- name: Install dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - software-properties-common
+    state: present
+
+- name: Disable swap
+  command: swapoff -a
+
+- name: Remove swap from fstab
+  replace:
+    path: /etc/fstab
+    regexp: '^.*swap.*$'
+    replace: ''
+
+- name: Install containerd
+  apt:
+    name: containerd
+    state: present
+
+- name: Enable containerd
+  systemd:
+    name: containerd
+    enabled: yes
+    state: started
+
+- name: Add Kubernetes repo key
+  shell: |
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+- name: Add Kubernetes repo
+  shell: |
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" > /etc/apt/sources.list.d/kubernetes.list
+
+- name: Install Kubernetes tools
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    update_cache: yes
+    state: present

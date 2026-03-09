@@ -1,0 +1,14 @@
+- hosts: k8s_cluster
+  become: yes
+  roles:
+    - common
+
+- hosts: master
+  become: yes
+  roles:
+    - master
+
+- hosts: workers
+  become: yes
+  roles:
+    - worker

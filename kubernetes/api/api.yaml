@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: quantum-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quantum-api
+  template:
+    metadata:
+      labels:
+        app: quantum-api
+    spec:
+      containers:
+      - name: api
+        image: satish6011/quantum-api:simulater
+        ports:
+        - containerPort: 8000

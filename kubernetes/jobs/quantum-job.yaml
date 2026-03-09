@@ -1,0 +1,12 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: quantum-simulation
+spec:
+  template:
+    spec:
+      containers:
+      - name: simulater
+        image: satish6011/quantum:simulater
+      restartPolicy: Never
+  backoffLimit: 3
